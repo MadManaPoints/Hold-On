@@ -1,6 +1,6 @@
 class_name Player
 
-extends CharacterBody3D
+extends RigidBody3D
 
 @export var can_move : bool = true
 @export var has_gravity : bool = true
@@ -60,6 +60,7 @@ var is_being_dragged : bool;
 var drag_vel : Vector3;
 var partner_vel : Vector3;
 
+var velocity : Vector3;
 
 func _ready() -> void:
 	check_input_mappings()
@@ -92,7 +93,7 @@ func _physics_process(delta: float) -> void:
 		var input_dir := Input.get_vector(input_back, input_forward, input_left, input_right)
 		move_dir = (Vector3(input_dir.x, 0, input_dir.y).normalized());
 		if(move_dir):
-			move_dir *= move_speed * delta;
+			move_dir *= move_speed;
 			velocity.x = move_dir.x;
 			velocity.z = move_dir.z;
 			#PREVENT BACKWARD MOVEMENT - DO I EVEN WANT THIS?!?!
@@ -106,19 +107,28 @@ func _physics_process(delta: float) -> void:
 
 	#rotate_player();
 	# Use velocity to actually move
-	move_and_slide();
+	#print(self.linear_velocity);
+	self.apply_central_force(velocity)
+	
+	if(velocity.x == 0):
+		self.linear_velocity.x = 0;
+	if(velocity.z == 0):
+		self.linear_velocity.z = 0;
+	
+	#move_and_slide();
 
 
 func _process(delta : float) -> void:
+	#print(velocity.x);
 	if(velocity == Vector3.ZERO):
 		anim.play("New_idle");
-	elif(velocity.x > 0.30):
+	elif(velocity.x > 0.03):
 		anim.play("New_walk");
-	elif(velocity.z < -0.55):
+	elif(velocity.z < -0.055):
 		anim.play("Left_strafe");
-	elif(velocity.z > 0.55):
+	elif(velocity.z > 0.055):
 		anim.play("Right_strafe");
-	elif(velocity.x < -0.4):
+	elif(velocity.x < -0.04):
 		anim.play("New_idle");
 	
 	reaching = Input.is_action_pressed(reach_hand);

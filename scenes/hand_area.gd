@@ -1,13 +1,13 @@
 extends RigidBody3D
 
-@export var player_one : CharacterBody3D;
-@export var player_two : CharacterBody3D;
+@export var player_one : RigidBody3D;
+@export var player_two : RigidBody3D;
 
 var target_pos : Vector3;
 var vel : Vector3;
 var move_speed : float = 5.0;
 
-var start_y_pos : float = 1.25;
+var start_y_pos : float = 1.5;
 var new_y_pos : float = 2.0;
 
 var hands_up : bool;

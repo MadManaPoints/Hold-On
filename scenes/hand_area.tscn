@@ -2,12 +2,13 @@
 
 [ext_resource type="Script" uid="uid://ky4vxscsi7pg" path="res://scenes/hand_area.gd" id="1_y4ug3"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_ihapm"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y4ug3"]
 transparency = 1
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_y4ug3"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_ihapm"]
+radius = 0.940878
 
 [node name="HandArea" type="RigidBody3D"]
 gravity_scale = 0.0
@@ -15,20 +16,18 @@ script = ExtResource("1_y4ug3")
 
 [node name="HandAreaOld" type="Node3D" parent="."]
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="HandAreaOld"]
-transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0)
-material = SubResource("StandardMaterial3D_y4ug3")
-
-[node name="HandCenter" type="Area3D" parent="HandAreaOld/CSGSphere3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HandAreaOld/CSGSphere3D/HandCenter"]
-shape = SubResource("SphereShape3D_y4ug3")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_ihapm")
 disabled = true
 
-[node name="PinJoint3D" type="PinJoint3D" parent="."]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+transform = Transform3D(0.18, 0, 0, 0, 0.18, 0, 0, 0, 0.18, 0, 0, 0)
+material = SubResource("StandardMaterial3D_y4ug3")
 
-[connection signal="area_entered" from="HandAreaOld/CSGSphere3D/HandCenter" to="." method="_on_hand_center_area_entered"]
-[connection signal="area_exited" from="HandAreaOld/CSGSphere3D/HandCenter" to="." method="_on_hand_center_area_exited"]
+[node name="HandCenter" type="Area3D" parent="CSGSphere3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGSphere3D/HandCenter"]
+shape = SubResource("SphereShape3D_y4ug3")
+
+[connection signal="area_entered" from="CSGSphere3D/HandCenter" to="." method="_on_hand_center_area_entered"]
+[connection signal="area_exited" from="CSGSphere3D/HandCenter" to="." method="_on_hand_center_area_exited"]

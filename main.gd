@@ -23,11 +23,14 @@ extends Node3D
 @export var player_two_node_b : NodePath;
 @export var player_one_body_node : NodePath;
 @export var player_two_body_node : NodePath;
+var new_joint_node_1 : NodePath;
+var new_joint_node_2 : NodePath;
 
 
 @onready var hand_node : RigidBody3D = $HandArea; 
 
-@onready var hand_center_joint : PinJoint3D = $HandArea/PinJoint3D;
+#@onready var hand_center_joint : PinJoint3D = $HandArea/PinJoint3D;
+@onready var p1_joint : Generic6DOFJoint3D = $RigidBody3D/CenterPin;
 
 var cam_zoom : float;
 #Keep players from getting too far from each other
@@ -38,8 +41,8 @@ var hands_locked : bool;
 
 
 func _ready() -> void:
-	player_one_joint.node_a = NodePath(player_one_node_a);
-	player_two_joint.node_a = NodePath(player_two_node_a);
+	new_joint_node_1 = player_one.get_path();
+	new_joint_node_2 = player_two.get_path();
 
 func _process(delta : float) -> void:
 	player_closeness(delta);
@@ -47,15 +50,20 @@ func _process(delta : float) -> void:
 
 	if(hands_locked):
 		Game.attached = true;
+		#print("YERRRR");
 		#player_one_joint.node_b = NodePath(player_one_node_b);
 		#player_two_joint.node_b = NodePath(player_two_node_b);
-		hand_center_joint.node_a = NodePath(player_one_body_node);
-		hand_center_joint.node_b = NodePath(player_two_body_node);
+		#hand_center_joint.node_a = NodePath(player_one_body_node);
+		#hand_center_joint.node_b = NodePath(player_two_body_node);
+		p1_joint.node_a = NodePath(new_joint_node_1);
+		p1_joint.node_b = NodePath(new_joint_node_2);
 	else:
+		p1_joint.node_a = NodePath("");
+		p1_joint.node_b = NodePath("");
 		#player_one_joint.node_b = NodePath("");
 		#player_two_joint.node_b = NodePath("");
-		hand_center_joint.node_a = NodePath("");
-		hand_center_joint.node_b = NodePath("");
+		#hand_center_joint.node_a = NodePath("");
+		#hand_center_joint.node_b = NodePath("");
 
 
 func _physics_process(delta: float) -> void:
@@ -112,11 +120,12 @@ func cam_movement(delta : float) -> void:
 	cam.position.y = map(cam_zoom, -2, 2, 5, 8);
 
 func detect_hands_lock() -> void:
+	#print(holding_hands)
 	hand_area.hands_up = (Input.is_action_pressed("right_stick_up") &&
 						Input.is_action_pressed("right_stick_up_p2"));
 	holding_hands = (Game.player_one_hand && Game.player_two_hand);
 
-	hands_locked = (holding_hands && (player_two.position.z - player_one.position.z) < 0.95);
+	hands_locked = holding_hands; #&& (player_two.position.z - player_one.position.z) < 0.95);
 	player_one.is_holding = (hands_locked && player_two.reaching);
 	player_two.is_holding = (hands_locked && player_one.reaching);
 	
