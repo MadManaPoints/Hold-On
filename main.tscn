@@ -1,0 +1,358 @@
+[gd_scene load_steps=24 format=3 uid="uid://tdujec33wash"]
+
+[ext_resource type="Script" uid="uid://dvon2dbuvgb33" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bij04v2y3yys3" path="res://scenes/proximity_test.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bawv6l13l36np" path="res://scenes/hand_area.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://b625eilen4luf" path="res://new_player.tscn" id="5_7mycd"]
+[ext_resource type="Texture2D" uid="uid://bj1fwi2fi1i3y" path="res://assets/black_box.png" id="5_lquwl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_0xm2m"]
+sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
+
+[sub_resource type="Environment" id="Environment_h2yge"]
+background_mode = 2
+sky = SubResource("Sky_0xm2m")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lquwl"]
+size = Vector3(49.4164, 2.06006, 0.517578)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lquwl"]
+animation = &"New_idle"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_lquwl"]
+filter_enabled = true
+filters = ["Node/Skeleton3D:mixamorigRightArm", "Node/Skeleton3D:mixamorigRightForeArm", "Node/Skeleton3D:mixamorigRightHand", "Node/Skeleton3D:mixamorigRightHandIndex1", "Node/Skeleton3D:mixamorigRightHandIndex2", "Node/Skeleton3D:mixamorigRightHandIndex3", "Node/Skeleton3D:mixamorigRightHandMiddle1", "Node/Skeleton3D:mixamorigRightHandMiddle2", "Node/Skeleton3D:mixamorigRightHandMiddle3", "Node/Skeleton3D:mixamorigRightHandPinky1", "Node/Skeleton3D:mixamorigRightHandPinky2", "Node/Skeleton3D:mixamorigRightHandPinky3", "Node/Skeleton3D:mixamorigRightHandRing1", "Node/Skeleton3D:mixamorigRightHandRing2", "Node/Skeleton3D:mixamorigRightHandRing3", "Node/Skeleton3D:mixamorigRightHandThumb1", "Node/Skeleton3D:mixamorigRightHandThumb2", "Node/Skeleton3D:mixamorigRightHandThumb3", "Node/Skeleton3D:mixamorigRightShoulder"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_272bh"]
+animation = &"New_walk"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5vw27"]
+graph_offset = Vector2(-147.095, 80.5413)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_lquwl")
+nodes/Animation/position = Vector2(300, 260)
+nodes/Blend2/node = SubResource("AnimationNodeBlend2_lquwl")
+nodes/Blend2/position = Vector2(560, 70)
+nodes/New_walk/node = SubResource("AnimationNodeAnimation_272bh")
+nodes/New_walk/position = Vector2(310, 70)
+nodes/output/position = Vector2(820, 140)
+node_connections = [&"Blend2", 0, &"New_walk", &"Blend2", 1, &"Animation", &"output", 0, &"Blend2"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7mycd"]
+animation = &"New_idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5vw27"]
+animation = &"New_walk"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_kek77"]
+filter_enabled = true
+filters = ["Node/Skeleton3D:mixamorigLeftArm", "Node/Skeleton3D:mixamorigLeftForeArm", "Node/Skeleton3D:mixamorigLeftHand", "Node/Skeleton3D:mixamorigLeftHandIndex1", "Node/Skeleton3D:mixamorigLeftHandIndex2", "Node/Skeleton3D:mixamorigLeftHandIndex3", "Node/Skeleton3D:mixamorigLeftHandMiddle1", "Node/Skeleton3D:mixamorigLeftHandMiddle2", "Node/Skeleton3D:mixamorigLeftHandMiddle3", "Node/Skeleton3D:mixamorigLeftHandPinky1", "Node/Skeleton3D:mixamorigLeftHandPinky2", "Node/Skeleton3D:mixamorigLeftHandPinky3", "Node/Skeleton3D:mixamorigLeftHandRing1", "Node/Skeleton3D:mixamorigLeftHandRing2", "Node/Skeleton3D:mixamorigLeftHandRing3", "Node/Skeleton3D:mixamorigLeftHandThumb1", "Node/Skeleton3D:mixamorigLeftHandThumb2", "Node/Skeleton3D:mixamorigLeftHandThumb3", "Node/Skeleton3D:mixamorigLeftShoulder"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_lquwl"]
+nodes/Animation/node = SubResource("AnimationNodeAnimation_5vw27")
+nodes/Animation/position = Vector2(280, 110)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_7mycd")
+"nodes/Animation 2/position" = Vector2(345.232, 322.717)
+nodes/Blend2/node = SubResource("AnimationNodeBlend2_kek77")
+nodes/Blend2/position = Vector2(591.022, 242.038)
+nodes/output/position = Vector2(950, 170)
+node_connections = [&"Blend2", 0, &"Animation", &"Blend2", 1, &"Animation 2", &"output", 0, &"Blend2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_lquwl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lquwl"]
+transparency = 1
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lquwl"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_272bh"]
+radius = 0.0375767
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
+transparency = 1
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7mycd"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_0xm2m")
+player_one_node_a = NodePath("new_target")
+player_one_node_b = NodePath("HandArea")
+player_two_node_a = NodePath("new_target2")
+player_two_node_b = NodePath("HandArea")
+player_one_body_node = NodePath("Player")
+player_two_body_node = NodePath("Player2")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_h2yge")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+physics_interpolation_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
+size = Vector3(140.5, 1, 20)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-3.78552e-08, 0.766044, -0.642788, 2.18557e-08, 0.642788, 0.766044, 1, 1.49502e-08, -4.10753e-08, -4, 5, 0)
+keep_aspect = 0
+
+[node name="Center" type="Node3D" parent="."]
+
+[node name="Tracker" type="Node3D" parent="."]
+
+[node name="Proximity Test" parent="." instance=ExtResource("3_h2yge")]
+
+[node name="Hands" type="Node3D" parent="."]
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 2.50625, 0)
+use_collision = true
+height = 4.075
+
+[node name="HandArea" parent="." node_paths=PackedStringArray("player_one", "player_two") instance=ExtResource("4_lquwl")]
+player_one = NodePath("../Player")
+player_two = NodePath("../Player2")
+
+[node name="PinJoint3D" parent="HandArea" index="2"]
+params/bias = 0.99
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
+visible = false
+scale = Vector2(0.04, 1.46)
+texture = ExtResource("5_lquwl")
+
+[node name="Middle Wall" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Middle Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0297, 0.530029, -0.00580406)
+shape = SubResource("BoxShape3D_lquwl")
+debug_fill = false
+
+[node name="Player" parent="." instance=ExtResource("5_7mycd")]
+transform = Transform3D(-4.37114e-10, 0, 0.01, 0, 0.01, 0, -0.01, 0, -4.37114e-10, 0, 1.231, -2)
+has_gravity = false
+can_jump = false
+base_speed = 42.0
+input_left = "move_left"
+input_right = "move_right"
+input_forward = "move_up"
+input_back = "move_down"
+input_jump = "jump"
+reach_hand = "reach_hand"
+
+[node name="Skeleton3D" parent="Player/Node" index="0"]
+bones/0/position = Vector3(3.58944, 68.4908, 0.920734)
+bones/0/rotation = Quaternion(-0.000540074, -0.0258895, 0.046734, 0.998572)
+bones/1/rotation = Quaternion(0.0140786, 0.000419417, -0.000914434, 0.9999)
+bones/2/rotation = Quaternion(0.0123146, 0.00231599, -0.0149184, 0.99981)
+bones/3/rotation = Quaternion(-0.0268318, 0.00186588, -0.0194015, 0.99945)
+bones/4/rotation = Quaternion(-0.0187411, 0.00328808, -0.0299025, 0.999372)
+bones/5/rotation = Quaternion(-0.0163633, -0.000384549, -0.00903736, 0.999825)
+bones/7/rotation = Quaternion(-0.66959, -0.374744, 0.500764, -0.400564)
+bones/8/rotation = Quaternion(0.470324, 0.0247401, -0.113733, 0.874785)
+bones/9/rotation = Quaternion(0.0116462, -0.000139373, 0.233384, 0.972315)
+bones/10/rotation = Quaternion(0.0454096, 0.361184, -0.0277324, 0.930975)
+bones/11/rotation = Quaternion(-0.0581185, 0.342402, 0.165356, 0.92306)
+bones/12/rotation = Quaternion(0.106627, -0.206231, -0.0868389, 0.968792)
+bones/13/rotation = Quaternion(0.0272955, 0.110164, 0.114988, 0.986862)
+bones/15/rotation = Quaternion(0.0810339, 0.0827757, 0.0405822, 0.992439)
+bones/16/rotation = Quaternion(0.146833, -0.000844698, -0.0202248, 0.988954)
+bones/17/rotation = Quaternion(0.0340512, -0.000225431, -0.000856117, 0.99942)
+bones/19/rotation = Quaternion(0.1416, 0.0039085, -0.00594505, 0.989898)
+bones/20/rotation = Quaternion(0.232699, -0.00145963, -0.0251475, 0.972223)
+bones/21/rotation = Quaternion(0.137442, -6.80789e-05, -0.0116506, 0.990441)
+bones/23/rotation = Quaternion(0.288026, 0.00571432, -0.00519224, 0.957592)
+bones/24/rotation = Quaternion(0.147231, 0.00104556, -0.0135354, 0.989009)
+bones/25/rotation = Quaternion(0.107446, 0.00132423, -0.00855888, 0.994173)
+bones/27/rotation = Quaternion(0.2604, 0.0119122, -0.0585245, 0.963652)
+bones/28/rotation = Quaternion(0.251284, -0.00213465, -0.0198677, 0.967707)
+bones/29/rotation = Quaternion(0.058726, 4.70946e-06, -0.0154185, 0.998155)
+bones/31/rotation = Quaternion(0.556233, -0.450399, 0.525177, 0.460364)
+bones/32/rotation = Quaternion(0.491993, -0.152187, -0.166578, 0.840853)
+bones/33/rotation = Quaternion(0.0110351, 0.000180859, -0.233351, 0.97233)
+bones/34/rotation = Quaternion(0.0229322, -0.00624213, 0.184397, 0.982565)
+bones/35/rotation = Quaternion(0.170587, -0.0997442, -0.052334, 0.978883)
+bones/36/rotation = Quaternion(0.0241974, -0.0528398, -0.0468913, 0.997208)
+bones/37/rotation = Quaternion(-0.0303633, -0.0051147, -0.031894, 0.999017)
+bones/39/rotation = Quaternion(0.0644077, -0.00551626, -0.0105279, 0.997853)
+bones/40/rotation = Quaternion(0.300902, 1.20372e-05, 0.0345983, 0.953027)
+bones/41/rotation = Quaternion(0.0864635, -2.46556e-05, 0.00964685, 0.996208)
+bones/43/rotation = Quaternion(0.0694938, -0.00800402, 0.00165714, 0.997549)
+bones/44/rotation = Quaternion(0.254405, 3.91214e-06, 0.0257972, 0.966754)
+bones/45/rotation = Quaternion(0.0798564, 0.00460607, 0.0104161, 0.996741)
+bones/47/rotation = Quaternion(0.172509, -0.0120758, -0.0158124, 0.984807)
+bones/48/rotation = Quaternion(0.20063, 7.67062e-06, 0.0236823, 0.979381)
+bones/49/rotation = Quaternion(0.0962096, 0.00585628, 0.0110562, 0.995283)
+bones/51/rotation = Quaternion(0.255966, -0.0230585, 0.00996995, 0.966359)
+bones/52/rotation = Quaternion(0.179789, 0.00017114, 0.0201355, 0.983499)
+bones/53/rotation = Quaternion(0.113174, -0.000120479, 0.0143346, 0.993472)
+bones/55/rotation = Quaternion(-0.0413369, 0.242651, 0.967541, 0.057238)
+bones/56/rotation = Quaternion(-0.538507, -0.0836021, 0.00884912, 0.838416)
+bones/57/rotation = Quaternion(0.403621, 0.117468, -0.0264866, 0.906967)
+bones/58/rotation = Quaternion(0.451307, 0.0555975, 0.00463192, 0.890623)
+bones/60/rotation = Quaternion(0.042532, 0.0846835, 0.992414, 0.078327)
+bones/61/rotation = Quaternion(-0.13805, 0.000228584, -0.0097982, 0.990377)
+bones/62/rotation = Quaternion(0.513806, 0.0246883, 0.0402241, 0.856607)
+bones/63/rotation = Quaternion(0.310876, -0.00859796, 0.00224127, 0.950409)
+
+[node name="LookAtModifier3D" parent="Player/Node/Skeleton3D" index="1"]
+target_node = NodePath("../../../../HandArea")
+bone_name = "mixamorigRightArm"
+bone = 32
+
+[node name="AnimationTree" type="AnimationTree" parent="Player"]
+tree_root = SubResource("AnimationNodeBlendTree_5vw27")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Blend2/blend_amount = 1.0
+
+[node name="PinJoint3D" type="PinJoint3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -71.9644, 0, -3.14566e-06)
+
+[node name="Player2" parent="." instance=ExtResource("5_7mycd")]
+transform = Transform3D(-4.37114e-10, 0, 0.01, 0, 0.01, 0, -0.01, 0, -4.37114e-10, 0, 1.231, 2)
+has_gravity = false
+can_jump = false
+base_speed = 42.0
+input_left = "move_left_p2"
+input_right = "move_right_p2"
+input_forward = "move_up_p2"
+input_back = "move_down_p2"
+input_jump = "jump_p2"
+reach_hand = "reach_hand_p2"
+playerTwo = true
+
+[node name="Skeleton3D" parent="Player2/Node" index="0"]
+bones/0/position = Vector3(3.58944, 68.4908, 0.920734)
+bones/0/rotation = Quaternion(-0.000540074, -0.0258895, 0.046734, 0.998572)
+bones/1/rotation = Quaternion(0.0140786, 0.000419417, -0.000914434, 0.9999)
+bones/2/rotation = Quaternion(0.0123146, 0.00231599, -0.0149184, 0.99981)
+bones/3/rotation = Quaternion(-0.0268318, 0.00186588, -0.0194015, 0.99945)
+bones/4/rotation = Quaternion(-0.0187411, 0.00328808, -0.0299025, 0.999372)
+bones/5/rotation = Quaternion(-0.0163633, -0.000384549, -0.00903736, 0.999825)
+bones/7/rotation = Quaternion(-0.527205, -0.445718, 0.614626, -0.381609)
+bones/8/rotation = Quaternion(0.44678, 0.180121, 0.148755, 0.863606)
+bones/9/rotation = Quaternion(0.0130294, -0.000138213, 0.261098, 0.965224)
+bones/10/rotation = Quaternion(0.127525, 0.10167, -0.197351, 0.966671)
+bones/11/rotation = Quaternion(0.150835, -0.0368567, 0.157711, 0.975201)
+bones/12/rotation = Quaternion(0.0139331, 0.0268155, -0.0623737, 0.997595)
+bones/13/rotation = Quaternion(-0.0219896, 0.00462154, 0.0174148, 0.999596)
+bones/15/rotation = Quaternion(0.176162, 0.00767569, 0.0499782, 0.983062)
+bones/16/rotation = Quaternion(0.230328, 1.64314e-05, -0.0252578, 0.972785)
+bones/17/rotation = Quaternion(0.0922547, 1.52874e-05, -0.00964534, 0.995689)
+bones/19/rotation = Quaternion(0.230058, 0.0126848, 0.0383673, 0.972338)
+bones/20/rotation = Quaternion(0.130469, 0.000170751, -0.0120874, 0.991379)
+bones/21/rotation = Quaternion(0.12998, -0.000158332, -0.011311, 0.991452)
+bones/23/rotation = Quaternion(0.282873, 0.0142261, 0.0446598, 0.958011)
+bones/24/rotation = Quaternion(0.105724, 1.74499e-05, -0.00950228, 0.99435)
+bones/25/rotation = Quaternion(0.0970946, -7.78055e-05, -0.00989045, 0.995226)
+bones/27/rotation = Quaternion(0.319013, 0.0252552, 0.00235765, 0.947411)
+bones/28/rotation = Quaternion(0.108207, 0.00358623, 0.0244438, 0.993821)
+bones/29/rotation = Quaternion(0.0669061, 0.000145083, -0.0100018, 0.997709)
+bones/31/rotation = Quaternion(0.599237, -0.396591, 0.509746, 0.473064)
+bones/32/rotation = Quaternion(0.502901, -0.081045, -0.017519, 0.860358)
+bones/33/rotation = Quaternion(0.0185044, 0.000171106, -0.391303, 0.920076)
+bones/34/rotation = Quaternion(-0.130507, -0.246057, -0.205586, 0.938167)
+bones/35/rotation = Quaternion(0.104385, -0.231312, -0.167811, 0.952596)
+bones/36/rotation = Quaternion(-0.0939956, -0.0700178, 0.0137291, 0.993012)
+bones/37/rotation = Quaternion(-0.00382862, 0.0833356, -0.158683, 0.983799)
+bones/39/rotation = Quaternion(0.0744728, 0.00239664, -0.0700151, 0.994759)
+bones/40/rotation = Quaternion(0.228394, 0.00143062, 0.0283887, 0.973154)
+bones/41/rotation = Quaternion(0.148667, 0.00215506, 0.00317335, 0.98888)
+bones/43/rotation = Quaternion(0.182875, 0.00272, -0.0230618, 0.982862)
+bones/44/rotation = Quaternion(0.326374, 0.00269391, 0.0336102, 0.944639)
+bones/45/rotation = Quaternion(0.268491, 0.000696708, 0.026138, 0.962927)
+bones/47/rotation = Quaternion(0.333059, -0.00282623, 0.0228931, 0.942624)
+bones/48/rotation = Quaternion(0.207378, -0.00142059, 0.0227519, 0.977995)
+bones/49/rotation = Quaternion(0.176682, 0.00136155, -0.000195108, 0.984267)
+bones/51/rotation = Quaternion(0.373677, -0.00645139, 0.0392445, 0.926706)
+bones/52/rotation = Quaternion(0.415073, 0.0033017, 0.0361273, 0.909065)
+bones/53/rotation = Quaternion(0.368942, 0.0111257, 0.0177982, 0.929215)
+bones/55/rotation = Quaternion(-0.0413369, 0.242651, 0.967541, 0.057238)
+bones/56/rotation = Quaternion(-0.538507, -0.0836021, 0.00884912, 0.838416)
+bones/57/rotation = Quaternion(0.403621, 0.117468, -0.0264866, 0.906967)
+bones/58/rotation = Quaternion(0.451307, 0.0555975, 0.00463192, 0.890623)
+bones/60/rotation = Quaternion(0.042532, 0.0846835, 0.992414, 0.078327)
+bones/61/rotation = Quaternion(-0.13805, 0.000228584, -0.0097982, 0.990377)
+bones/62/rotation = Quaternion(0.513806, 0.0246883, 0.0402241, 0.856607)
+bones/63/rotation = Quaternion(0.310876, -0.00859796, 0.00224127, 0.950409)
+
+[node name="LookAtModifier3D" parent="Player2/Node/Skeleton3D" index="1"]
+target_node = NodePath("../../../../HandArea")
+bone_name = "mixamorigLeftArm"
+bone = 8
+
+[node name="AnimationTree" type="AnimationTree" parent="Player2"]
+tree_root = SubResource("AnimationNodeBlendTree_lquwl")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Blend2/blend_amount = 1.0
+
+[node name="new_target" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000540495, 1.00203, 2.69562e-05)
+gravity_scale = 0.0
+
+[node name="new_target_old" type="CSGMesh3D" parent="new_target"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_lquwl")
+material = SubResource("StandardMaterial3D_lquwl")
+
+[node name="P1_Hand" type="Area3D" parent="new_target/new_target_old"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="new_target/new_target_old/P1_Hand"]
+shape = SubResource("SphereShape3D_lquwl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="new_target"]
+shape = SubResource("SphereShape3D_272bh")
+disabled = true
+
+[node name="PinJoint3D" type="PinJoint3D" parent="new_target"]
+params/bias = 0.99
+params/damping = 8.0
+
+[node name="new_target2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+gravity_scale = 0.0
+
+[node name="new_target2_old" type="CSGMesh3D" parent="new_target2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_lquwl")
+material = SubResource("StandardMaterial3D_7mycd")
+
+[node name="P2_Hand" type="Area3D" parent="new_target2/new_target2_old"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="new_target2/new_target2_old/P2_Hand"]
+shape = SubResource("SphereShape3D_7mycd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="new_target2"]
+shape = SubResource("SphereShape3D_272bh")
+disabled = true
+
+[node name="PinJoint3D" type="PinJoint3D" parent="new_target2"]
+params/bias = 0.99
+params/damping = 8.0
+
+[editable path="Proximity Test"]
+[editable path="HandArea"]
+[editable path="Player"]
+[editable path="Player2"]

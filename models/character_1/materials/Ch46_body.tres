@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://dp6aaqi4yj54u"]
+
+[ext_resource type="Texture2D" uid="uid://1rfl1g57pkuv" path="res://models/character_1/Character_1_0.png" id="1_pgbmg"]
+[ext_resource type="Texture2D" uid="uid://bbm4djpx5yirs" path="res://models/character_1/Character_1_1.png" id="2_rx72g"]
+
+[resource]
+resource_name = "Ch46_body"
+albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
+albedo_texture = ExtResource("1_pgbmg")
+metallic = 0.5
+roughness = 0.5
+normal_enabled = true
+normal_texture = ExtResource("2_rx72g")

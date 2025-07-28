@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bawv6l13l36np"]
+
+[ext_resource type="Script" uid="uid://ky4vxscsi7pg" path="res://scenes/hand_area.gd" id="1_y4ug3"]
+
+[node name="HandArea" type="Node3D"]
+script = ExtResource("1_y4ug3")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)

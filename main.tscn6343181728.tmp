@@ -1,0 +1,80 @@
+[gd_scene load_steps=8 format=3 uid="uid://tdujec33wash"]
+
+[ext_resource type="Script" uid="uid://dvon2dbuvgb33" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://addons/proto_controller/proto_controller.tscn" id="1_ig7tw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_0xm2m"]
+sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
+
+[sub_resource type="Environment" id="Environment_h2yge"]
+background_mode = 2
+sky = SubResource("Sky_0xm2m")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+albedo_color = Color(0.865549, 0.450147, 0.774641, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_color = Color(0.680101, 0.982163, 0.757335, 1)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_0xm2m")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_h2yge")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
+size = Vector3(140.5, 1, 20)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-3.78552e-08, 0.766044, -0.642788, 2.18557e-08, 0.642788, 0.766044, 1, 1.49502e-08, -4.10753e-08, -2, 4, 0)
+
+[node name="ProtoController" parent="." instance=ExtResource("1_ig7tw")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0.5, -2)
+base_speed = 1.5
+input_left = "move_left"
+input_right = "move_right"
+input_forward = "move_up"
+input_back = "move_down"
+input_jump = "jump"
+
+[node name="CSGMesh3D" parent="ProtoController" index="3"]
+material = SubResource("StandardMaterial3D_h2yge")
+
+[node name="ProtoController2" parent="." instance=ExtResource("1_ig7tw")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0.5, 2)
+base_speed = 1.5
+input_left = "move_left_p2"
+input_right = "move_right_p2"
+input_forward = "move_up_p2"
+input_back = "move_down_p2"
+input_jump = "jump_p2"
+playerTwo = true
+
+[node name="CSGMesh3D" parent="ProtoController2" index="3"]
+material = SubResource("StandardMaterial3D_0xm2m")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 2.55, 0)
+use_collision = true
+height = 4.1
+
+[node name="Center" type="Node3D" parent="."]
+
+[editable path="ProtoController"]
+[editable path="ProtoController/Sketchfab_Scene"]
+[editable path="ProtoController2"]
+[editable path="ProtoController2/Sketchfab_Scene"]
