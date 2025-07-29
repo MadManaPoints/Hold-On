@@ -5,10 +5,10 @@ extends RigidBody3D
 
 var target_pos : Vector3;
 var vel : Vector3;
-var move_speed : float = 5.0;
+var move_speed : float = 10.0;
 
 var start_y_pos : float = 1.5;
-var new_y_pos : float = 2.0;
+var new_y_pos : float = 2.5;
 
 var hands_up : bool;
 

@@ -6,9 +6,10 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y4ug3"]
 transparency = 1
+albedo_color = Color(1, 1, 1, 0)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_y4ug3"]
-radius = 0.940878
+radius = 1.00559
 
 [node name="HandArea" type="RigidBody3D"]
 gravity_scale = 0.0

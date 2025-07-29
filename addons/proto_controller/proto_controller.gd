@@ -98,7 +98,8 @@ func _physics_process(delta: float) -> void:
 			velocity.z = move_dir.z;
 			#PREVENT BACKWARD MOVEMENT - DO I EVEN WANT THIS?!?!
 			if(velocity.x < -0.3):
-				velocity = Vector3.ZERO;
+				pass
+				#velocity = Vector3.ZERO;
 		else:
 			velocity.x = move_toward(velocity.x, 0, 8);
 			velocity.z = move_toward(velocity.z, 0, 8);

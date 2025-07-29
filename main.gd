@@ -16,16 +16,8 @@ extends Node3D
 @onready var player_one_joint : PinJoint3D = $new_target/PinJoint3D;
 @onready var player_two_joint : PinJoint3D = $new_target2/PinJoint3D;
 
-@export_group("Joint Nodes")
-@export var player_one_node_a : NodePath;
-@export var player_one_node_b : NodePath;
-@export var player_two_node_a : NodePath;
-@export var player_two_node_b : NodePath;
-@export var player_one_body_node : NodePath;
-@export var player_two_body_node : NodePath;
 var new_joint_node_1 : NodePath;
 var new_joint_node_2 : NodePath;
-
 
 @onready var hand_node : RigidBody3D = $HandArea; 
 
@@ -38,38 +30,35 @@ var too_far : bool = false;
 var holding_hands : bool;
 
 var hands_locked : bool;
+var turn_on_middle_collision : bool; 
+
+@onready var middle_collision : RigidBody3D = $RigidBody3D;
 
 
 func _ready() -> void:
+	#Get player paths for joints 
 	new_joint_node_1 = player_one.get_path();
 	new_joint_node_2 = player_two.get_path();
+	middle_collision.set_collision_layer_value(1, false);
 
 func _process(delta : float) -> void:
 	player_closeness(delta);
 	detect_hands_lock();
-
+	
+	#Pins players together to simulate holding hands
 	if(hands_locked):
 		Game.attached = true;
-		#print("YERRRR");
-		#player_one_joint.node_b = NodePath(player_one_node_b);
-		#player_two_joint.node_b = NodePath(player_two_node_b);
-		#hand_center_joint.node_a = NodePath(player_one_body_node);
-		#hand_center_joint.node_b = NodePath(player_two_body_node);
 		p1_joint.node_a = NodePath(new_joint_node_1);
 		p1_joint.node_b = NodePath(new_joint_node_2);
 	else:
 		p1_joint.node_a = NodePath("");
 		p1_joint.node_b = NodePath("");
-		#player_one_joint.node_b = NodePath("");
-		#player_two_joint.node_b = NodePath("");
-		#hand_center_joint.node_a = NodePath("");
-		#hand_center_joint.node_b = NodePath("");
 
 
 func _physics_process(delta: float) -> void:
 	cam_movement(delta);
-	if(!hands_locked):
-		follow_hands(delta);
+	#if(!hands_locked):
+	follow_hands(delta);
 	
 	if(!Game.attached):
 		player_two.is_being_dragged = false;
@@ -84,14 +73,14 @@ func follow_hands(delta: float) -> void:
 	#MOVING USING PHYSICS
 	if(target_one.position.distance_to(player_two.target_hand) > 0.2):
 		var new_dir: Vector3 = (player_two.target_hand - target_one.position).normalized();
-		target_one.linear_velocity = new_dir * 70 * delta;
+		target_one.linear_velocity = new_dir * 200 * delta;
 	else:
 		target_one.position = player_two.target_hand;
 		target_one.linear_velocity = Vector3.ZERO;
 
 	if(target_two.position.distance_to(player_one.target_hand) > 0.2):
 		var new_dir: Vector3 = (player_one.target_hand - target_two.position).normalized();
-		target_two.linear_velocity = new_dir * 70 * delta;
+		target_two.linear_velocity = new_dir * 200 * delta;
 	else:
 		target_two.position = player_one.target_hand;
 		target_two.linear_velocity = Vector3.ZERO;
@@ -123,15 +112,25 @@ func detect_hands_lock() -> void:
 	#print(holding_hands)
 	hand_area.hands_up = (Input.is_action_pressed("right_stick_up") &&
 						Input.is_action_pressed("right_stick_up_p2"));
+	middle_collision.hands_up = hand_area.hands_up;
+						
 	holding_hands = (Game.player_one_hand && Game.player_two_hand);
-
 	hands_locked = holding_hands; #&& (player_two.position.z - player_one.position.z) < 0.95);
+	
+	if(hands_locked && !turn_on_middle_collision):
+		middle_collision.set_collision_layer_value(1, true);
+		turn_on_middle_collision = true;
+	elif(!hands_locked && turn_on_middle_collision):
+		middle_collision.set_collision_layer_value(1, false);
+		turn_on_middle_collision = false;
+	
 	player_one.is_holding = (hands_locked && player_two.reaching);
 	player_two.is_holding = (hands_locked && player_one.reaching);
 	
 	if(!player_two.reaching && !player_one.reaching && holding_hands):
 		Game.player_one_hand = false;
 		Game.player_two_hand = false;
+
 
 
 func player_closeness(delta : float) -> void:
