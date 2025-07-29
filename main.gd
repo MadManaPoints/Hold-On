@@ -4,70 +4,50 @@ extends Node3D
 @export var cam_speed : float = 1.0;
 
 @onready var cam : Camera3D = $Camera3D;
-@onready var center : Node3D = $Center;
-@onready var tracker : Node3D = $Tracker;
 @onready var player_one : Player = $Player;
 @onready var player_two : Player = $Player2;
+@onready var center : Node3D = $Center;
+@onready var tracker : Node3D = $Tracker;
+
 @onready var hand_area : Node3D = $HandArea;
 @onready var proximity_test : Control = $"Proximity Test";
 @onready var target_one : RigidBody3D = $new_target;
 @onready var target_two : RigidBody3D = $new_target2;
-
-@onready var player_one_joint : PinJoint3D = $new_target/PinJoint3D;
-@onready var player_two_joint : PinJoint3D = $new_target2/PinJoint3D;
+@onready var hand_node : RigidBody3D = $HandArea; 
+@onready var p1_joint : Generic6DOFJoint3D = $JointBody/CenterPin;
+@onready var middle_collision : RigidBody3D = $JointBody;
 
 var new_joint_node_1 : NodePath;
 var new_joint_node_2 : NodePath;
-
-@onready var hand_node : RigidBody3D = $HandArea; 
-
-#@onready var hand_center_joint : PinJoint3D = $HandArea/PinJoint3D;
-@onready var p1_joint : Generic6DOFJoint3D = $RigidBody3D/CenterPin;
 
 var cam_zoom : float;
 #Keep players from getting too far from each other
 var too_far : bool = false;
 var holding_hands : bool;
-
 var hands_locked : bool;
-var turn_on_middle_collision : bool; 
-
-@onready var middle_collision : RigidBody3D = $RigidBody3D;
+var turn_on_middle_collision : bool;
 
 
 func _ready() -> void:
 	#Get player paths for joints 
 	new_joint_node_1 = player_one.get_path();
 	new_joint_node_2 = player_two.get_path();
+	
+	#Turn off collision for joint
 	middle_collision.set_collision_layer_value(1, false);
+
 
 func _process(delta : float) -> void:
 	player_closeness(delta);
 	detect_hands_lock();
-	
-	#Pins players together to simulate holding hands
-	if(hands_locked):
-		Game.attached = true;
-		p1_joint.node_a = NodePath(new_joint_node_1);
-		p1_joint.node_b = NodePath(new_joint_node_2);
-	else:
-		p1_joint.node_a = NodePath("");
-		p1_joint.node_b = NodePath("");
+	lock_hands();
 
 
 func _physics_process(delta: float) -> void:
 	cam_movement(delta);
-	#if(!hands_locked):
 	follow_hands(delta);
-	
-	if(!Game.attached):
-		player_two.is_being_dragged = false;
-	elif((player_one.reaching && !player_two.reaching) && holding_hands):
-		player_two.partner_vel.x = player_one.velocity.x;
-		player_two.is_being_dragged = true;
-	else:
-		#player_two.partner_vel.x = 0.0;
-		player_two.is_being_dragged = false;
+	player_drag_detection();
+
 
 func follow_hands(delta: float) -> void:
 	#MOVING USING PHYSICS
@@ -84,6 +64,28 @@ func follow_hands(delta: float) -> void:
 	else:
 		target_two.position = player_one.target_hand;
 		target_two.linear_velocity = Vector3.ZERO;
+
+
+func lock_hands() -> void:
+	#Pins players together to simulate holding hands
+	if(hands_locked):
+		Game.attached = true;
+		p1_joint.node_a = NodePath(new_joint_node_1);
+		p1_joint.node_b = NodePath(new_joint_node_2);
+	else:
+		p1_joint.node_a = NodePath("");
+		p1_joint.node_b = NodePath("");
+
+
+func player_drag_detection() -> void:
+	if(!Game.attached):
+		player_two.is_being_dragged = false;
+	elif((player_one.reaching && !player_two.reaching) && holding_hands):
+		player_two.partner_vel.x = player_one.velocity.x;
+		player_two.is_being_dragged = true;
+	else:
+		#player_two.partner_vel.x = 0.0;
+		player_two.is_being_dragged = false;
 
 
 func cam_movement(delta : float) -> void:
@@ -107,6 +109,7 @@ func cam_movement(delta : float) -> void:
 		too_far = true;
 		cam_zoom = cam_zoom;
 	cam.position.y = map(cam_zoom, -2, 2, 5, 8);
+
 
 func detect_hands_lock() -> void:
 	#print(holding_hands)
@@ -132,13 +135,12 @@ func detect_hands_lock() -> void:
 		Game.player_two_hand = false;
 
 
-
 func player_closeness(delta : float) -> void:
 	#CHANGE ICON BASED ON PLAYER PROXIMITY 
 	if(too_far):
 		proximity_test.get_child(1).visible = false;
 		proximity_test.get_child(0).visible = true;
-	elif(holding_hands):
+	elif(hands_locked):
 		proximity_test.get_child(0).visible = false;
 		proximity_test.get_child(1).visible = true;
 	else:

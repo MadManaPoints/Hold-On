@@ -8,7 +8,6 @@ var vel : Vector3;
 var move_speed : float = 200.0;
 
 var hands_up : bool;
-
 var start_y_pos : float;
 var new_y_pos : float = 2.4;
 

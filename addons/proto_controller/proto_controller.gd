@@ -62,6 +62,8 @@ var partner_vel : Vector3;
 
 var velocity : Vector3;
 
+var intro : bool;
+
 func _ready() -> void:
 	check_input_mappings()
 	move_speed = base_speed;
@@ -69,14 +71,8 @@ func _ready() -> void:
 
 	if(playerTwo):
 		player_input_num = 1;
-	
-	if(!playerTwo):
-		hand_id = skeleton.find_bone("mixamorigRightHand");
-	else:
-		hand_id = skeleton.find_bone("mixamorigLeftHand");
-	
-	#THIS WILL TRACK WHEN LOOK MODIFIER NODE HAS PROCESSED 
-	look.modification_processed.connect(_on_modification_processed);
+
+	get_player_hands();
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -87,7 +83,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		release_mouse()
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	player_movement();
+
+
+func _process(_delta : float) -> void:
+	animation_handler();
+	if(!intro):
+		handle_player_reach();
+
+
+func player_movement() -> void:
 	# Apply desired movement to velocity
 	if can_move:
 		var input_dir := Input.get_vector(input_back, input_forward, input_left, input_right)
@@ -105,10 +111,10 @@ func _physics_process(delta: float) -> void:
 			velocity.z = move_toward(velocity.z, 0, 8);
 	else:
 		velocity = Vector3.ZERO;
+	
+	if(intro):
+		rotate_player();
 
-	#rotate_player();
-	# Use velocity to actually move
-	#print(self.linear_velocity);
 	self.apply_central_force(velocity)
 	
 	if(velocity.x == 0):
@@ -116,22 +122,13 @@ func _physics_process(delta: float) -> void:
 	if(velocity.z == 0):
 		self.linear_velocity.z = 0;
 	
-	#move_and_slide();
 
+func _on_modification_processed():
+	#KEEP TRACK OF HAND POSITION AFTER OVERRIDE
+	if(modified_bone):
+		get_hand_position();
 
-func _process(delta : float) -> void:
-	#print(velocity.x);
-	if(velocity == Vector3.ZERO):
-		anim.play("New_idle");
-	elif(velocity.x > 0.03):
-		anim.play("New_walk");
-	elif(velocity.z < -0.055):
-		anim.play("Left_strafe");
-	elif(velocity.z > 0.055):
-		anim.play("Right_strafe");
-	elif(velocity.x < -0.04):
-		anim.play("New_idle");
-	
+func handle_player_reach() -> void:
 	reaching = Input.is_action_pressed(reach_hand);
 
 	#SET PROPER TRIGGER BUTTON FOR BOTH PLAYERS
@@ -144,16 +141,23 @@ func _process(delta : float) -> void:
 		$Node/Skeleton3D/LookAtModifier3D.active = false;
 		anim_tree.active = false;
 
-
 	#KEEP TRACK OF HAND POSITION BEFORE OVERRIDE
 	if(!modified_bone):
 		get_hand_position();
 
 
-func _on_modification_processed():
-	#KEEP TRACK OF HAND POSITION AFTER OVERRIDE
-	if(modified_bone):
-		get_hand_position();
+func animation_handler() -> void:
+	#print(velocity.x);
+	if(velocity == Vector3.ZERO):
+		anim.play("New_idle");
+	elif(velocity.x > 0.03):
+		anim.play("New_walk");
+	elif(velocity.z < -0.055):
+		anim.play("Left_strafe");
+	elif(velocity.z > 0.055):
+		anim.play("Right_strafe");
+	elif(velocity.x < -0.04):
+		anim.play("New_idle");
 
 
 func get_hand_position() -> void:
@@ -177,18 +181,6 @@ func rotate_player() -> void:
 		rotation.y = -angle;
 
 
-## Rotate us to look around.
-## Base of controller rotates around y (left/right). Head rotates around x (up/down).
-## Modifies look_rotation based on rot_input, then resets basis and rotates by look_rotation.
-func rotate_look(rot_input : Vector2):
-	look_rotation.x -= rot_input.y * look_speed
-	look_rotation.y -= rot_input.x * look_speed
-	transform.basis = Basis()
-	rotate_y(look_rotation.y)
-	#head.transform.basis = Basis()
-	#head.rotate_x(look_rotation.x)
-
-
 func enable_freefly():
 	collider.disabled = true
 	freeflying = true
@@ -207,6 +199,15 @@ func capture_mouse():
 func release_mouse():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	mouse_captured = false
+
+func get_player_hands() -> void:
+	if(!playerTwo):
+		hand_id = skeleton.find_bone("mixamorigRightHand");
+	else:
+		hand_id = skeleton.find_bone("mixamorigLeftHand");
+	
+	#THIS WILL TRACK WHEN LOOK MODIFIER NODE HAS PROCESSED 
+	look.modification_processed.connect(_on_modification_processed);
 
 
 ## Checks if some Input Actions haven't been created.
@@ -230,6 +231,7 @@ func check_input_mappings():
 	if can_freefly and not InputMap.has_action(input_freefly):
 		push_error("Freefly disabled. No InputAction found for input_freefly: " + input_freefly)
 		can_freefly = false
+
 
 func player_cam_movement(delta : float) -> void:
 	if(Input.is_action_pressed("cam_rotation_left")):

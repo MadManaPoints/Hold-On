@@ -1,6 +1,6 @@
 extends Node
 
-
+var intro : bool = false; #Should be true in the beginning 
 var player_one_hand : bool;
 var player_two_hand : bool;
 var attached : bool;
