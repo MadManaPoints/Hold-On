@@ -141,7 +141,7 @@ func detect_hands_lock() -> void:
 
 
 func player_closeness(delta : float) -> void:
-	print(players_in_center)
+	#print(players_in_center)
 	#CHANGE ICON BASED ON PLAYER PROXIMITY 
 	if(too_far):
 		proximity_test.get_child(1).visible = false;

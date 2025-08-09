@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://57iy86fj2apq"]
+
+[ext_resource type="Texture2D" uid="uid://dc18vo7qxgo4u" path="res://assets/EnvironmentTextures/Sprites/y2k_grid.png" id="1_pybca"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4c57u"]
+albedo_texture = ExtResource("1_pybca")
+uv1_scale = Vector3(40, 4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mi8v4"]
+material = SubResource("StandardMaterial3D_4c57u")
+
+[node name="Ground" type="Node3D"]
+
+[node name="Left" type="MeshInstance3D" parent="."]
+transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 10, 0, 0, -5.28794)
+mesh = SubResource("BoxMesh_mi8v4")
+
+[node name="Right" type="MeshInstance3D" parent="."]
+transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 10, 0, 0, 5.264)
+mesh = SubResource("BoxMesh_mi8v4")

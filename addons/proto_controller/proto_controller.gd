@@ -122,7 +122,7 @@ func player_movement() -> void:
 	
 	if(intro):
 		rotate_player();
-	print(velocity.x)
+	#print(velocity.x)
 
 	self.apply_central_force(velocity)
 	
