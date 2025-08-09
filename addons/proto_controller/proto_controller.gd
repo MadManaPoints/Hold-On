@@ -34,6 +34,7 @@ extends RigidBody3D
 
 @export var playerTwo : bool; 
 
+
 var mouse_captured : bool = false
 var look_rotation : Vector2
 var move_speed : float = 0.0
@@ -72,6 +73,7 @@ func _ready() -> void:
 	if(playerTwo):
 		player_input_num = 1;
 
+
 	get_player_hands();
 
 
@@ -106,6 +108,12 @@ func player_movement() -> void:
 			if(velocity.x < -0.3):
 				pass
 				#velocity = Vector3.ZERO;
+			if Game.attached:
+				if playerTwo and position.z > 0.62 and move_dir.z / move_dir.z > 0.0:
+					#velocity.z *= -1.0
+					self.apply_central_impulse(Vector3.FORWARD)
+				elif not playerTwo and position.z < -0.505 and move_dir.z / move_dir.z < 0.0:
+					velocity.z *= -1.0
 		else:
 			velocity.x = move_toward(velocity.x, 0, 8);
 			velocity.z = move_toward(velocity.z, 0, 8);
@@ -114,6 +122,7 @@ func player_movement() -> void:
 	
 	if(intro):
 		rotate_player();
+	print(velocity.x)
 
 	self.apply_central_force(velocity)
 	

@@ -189,3 +189,26 @@ common/physics_jitter_fix=0.0
 jolt_physics_3d/simulation/speculative_contact_distance=1.0
 jolt_physics_3d/simulation/continuous_cd_movement_threshold=1.0
 common/physics_interpolation=true
+
+[shader_globals]
+
+specular_smoothness={
+"type": "float",
+"value": 0.05
+}
+fresnel_smoothness={
+"type": "float",
+"value": 0.05
+}
+outline_width={
+"type": "float",
+"value": 3.0
+}
+outline_color={
+"type": "color",
+"value": Color(0, 0, 0, 1)
+}
+diffuse_curve={
+"type": "sampler2D",
+"value": "res://assets/src/diffuse-texture.tres"
+}
