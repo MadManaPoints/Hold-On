@@ -1,10 +1,13 @@
-[gd_scene load_steps=19 format=4 uid="uid://b625eilen4luf"]
+[gd_scene load_steps=20 format=4 uid="uid://b625eilen4luf"]
 
 [ext_resource type="Texture2D" uid="uid://cd3mpj1c5fs26" path="res://models/character_2/player_1_0.png" id="1_j1k7i"]
 [ext_resource type="Script" uid="uid://bhsfbtq24wj1y" path="res://addons/proto_controller/proto_controller.gd" id="1_tidp7"]
 [ext_resource type="Texture2D" uid="uid://bmj1e2asorogp" path="res://models/character_2/player_1_1.png" id="2_tidp7"]
 [ext_resource type="Shader" uid="uid://rb34qiip22dg" path="res://assets/src/outline.gdshader" id="4_vdid1"]
 [ext_resource type="Shader" uid="uid://c6knweo203hp1" path="res://assets/src/cel-shader-base.gdshader" id="5_40y4h"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vdid1"]
+rough = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tcu7b"]
 resource_name = "Ch46_body"
@@ -2518,8 +2521,8 @@ radius = 15.2
 height = 134.8
 
 [node name="Player" type="RigidBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_vdid1")
 gravity_scale = 0.0
-linear_damp = 1.0
 script = ExtResource("1_tidp7")
 
 [node name="Node" type="Node3D" parent="."]

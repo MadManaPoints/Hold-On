@@ -197,7 +197,7 @@ void fragment()
 
 	//text *= vec4(1.0, 1.0, 1.0, 1.0);
 	COLOR = text;
-	
+
 
 
 }

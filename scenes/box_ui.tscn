@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhrdr6p1ibfkr"]
+
+[ext_resource type="Texture2D" uid="uid://ld3tylgpsox" path="res://assets/graybox/box.2png.png" id="1_e1aew"]
+
+[node name="BoxUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_e1aew")

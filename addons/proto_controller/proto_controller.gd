@@ -61,7 +61,9 @@ var is_being_dragged : bool;
 var drag_vel : Vector3;
 var partner_vel : Vector3;
 
-var velocity : Vector3;
+var velocity : Vector3
+var max_speed : float
+var target_rotation : Vector3
 
 var intro : bool;
 
@@ -95,6 +97,11 @@ func _process(_delta : float) -> void:
 		handle_player_reach();
 
 
+func _integrate_forces(state):
+	if state.linear_velocity.length() > max_speed:
+		state.linear_velocity = state.linear_velocity.normalized() * max_speed
+
+
 func player_movement() -> void:
 	# Apply desired movement to velocity
 	if can_move:
@@ -119,23 +126,23 @@ func player_movement() -> void:
 			velocity.z = move_toward(velocity.z, 0, 8);
 	else:
 		velocity = Vector3.ZERO;
-	
-	if(intro):
+
+	if not intro:
 		rotate_player();
 	#print(velocity.x)
-
-	self.apply_central_force(velocity)
+	self.apply_central_impulse(velocity)
 	
 	if(velocity.x == 0):
 		self.linear_velocity.x = 0;
 	if(velocity.z == 0):
 		self.linear_velocity.z = 0;
-	
+
 
 func _on_modification_processed():
 	#KEEP TRACK OF HAND POSITION AFTER OVERRIDE
 	if(modified_bone):
 		get_hand_position();
+
 
 func handle_player_reach() -> void:
 	reaching = Input.is_action_pressed(reach_hand);
@@ -157,6 +164,14 @@ func handle_player_reach() -> void:
 
 func animation_handler() -> void:
 	#print(velocity.x);
+	if velocity == Vector3.ZERO:
+		anim.play("New_idle")
+	elif velocity.x > 0.03 or velocity.x < -0.03:
+		anim.play("New_walk");
+
+
+func old_animation_handler() -> void:
+	#print(velocity.x);
 	if(velocity == Vector3.ZERO):
 		anim.play("New_idle");
 	elif(velocity.x > 0.03):
@@ -176,7 +191,6 @@ func get_hand_position() -> void:
 
 
 func rotate_player() -> void:
-	#MOST PIECES OF ROTATION CODE ARE FROM GOOGLE SEARCH
 	var joy_x = Input.get_joy_axis(player_input_num, JOY_AXIS_LEFT_X);
 	var joy_y = Input.get_joy_axis(player_input_num, JOY_AXIS_LEFT_Y);
 
@@ -187,7 +201,15 @@ func rotate_player() -> void:
 
 	if joy_x != 0 || joy_y != 0:
 		var angle = atan2(joy_y, joy_x);
-		rotation.y = -angle;
+		target_rotation.y = -angle
+		print(target_rotation.y)
+		#rotation = target_rotation
+
+	if self.rotation.distance_to(target_rotation) > 0.1:
+		print(target_rotation)
+	else:
+		pass
+		self.angular_velocity.y = move_toward(angular_velocity.y, 0, 8)
 
 
 func enable_freefly():
@@ -217,7 +239,6 @@ func get_player_hands() -> void:
 	
 	#THIS WILL TRACK WHEN LOOK MODIFIER NODE HAS PROCESSED 
 	look.modification_processed.connect(_on_modification_processed);
-
 
 ## Checks if some Input Actions haven't been created.
 ## Disables functionality accordingly.
@@ -268,6 +289,7 @@ func hanlde_freefly(delta : float) -> void:
 		#motion *= freefly_speed * delta
 		#move_and_collide(motion)
 		return
+
 
 func old_movement(delta : float) -> void:
 	if can_move:
