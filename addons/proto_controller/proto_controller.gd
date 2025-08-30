@@ -65,6 +65,8 @@ var velocity : Vector3
 var max_speed : float
 var target_rotation : Vector3
 
+var rotation_speed : float = 8.0
+
 var intro : bool;
 
 func _ready() -> void:
@@ -87,8 +89,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		release_mouse()
 
 
-func _physics_process(_delta: float) -> void:
-	player_movement();
+func _physics_process(delta: float) -> void:
+	player_movement(delta);
 
 
 func _process(_delta : float) -> void:
@@ -100,9 +102,18 @@ func _process(_delta : float) -> void:
 func _integrate_forces(state):
 	if state.linear_velocity.length() > max_speed:
 		state.linear_velocity = state.linear_velocity.normalized() * max_speed
+	
+	var input_vector := Input.get_vector(input_back, input_forward, input_left, input_right) # Example input actions
+	if input_vector.length() > 0:
+		var target_direction := Vector3(-input_vector.x, 0, -input_vector.y).normalized() # Adjust based on your camera/world orientation
+		var current_transform = state.get_transform()
+		var current_forward = -current_transform.basis.z
+		var angle_diff = current_forward.signed_angle_to(target_direction, Vector3.UP)
+		state.angular_velocity.y = angle_diff * rotation_speed
+	else:
+		state.angular_velocity.y = 0 
 
-
-func player_movement() -> void:
+func player_movement(delta : float) -> void:
 	# Apply desired movement to velocity
 	if can_move:
 		var input_dir := Input.get_vector(input_back, input_forward, input_left, input_right)
@@ -128,14 +139,16 @@ func player_movement() -> void:
 		velocity = Vector3.ZERO;
 
 	if not intro:
-		rotate_player();
+		pass
+	#rotate_player(delta);
 	#print(velocity.x)
 	self.apply_central_impulse(velocity)
-	
+
 	if(velocity.x == 0):
 		self.linear_velocity.x = 0;
 	if(velocity.z == 0):
 		self.linear_velocity.z = 0;
+
 
 
 func _on_modification_processed():
@@ -190,23 +203,28 @@ func get_hand_position() -> void:
 	target_hand = hand_pos;
 
 
-func rotate_player() -> void:
-	var joy_x = Input.get_joy_axis(player_input_num, JOY_AXIS_LEFT_X);
-	var joy_y = Input.get_joy_axis(player_input_num, JOY_AXIS_LEFT_Y);
-
+func rotate_player(delta : float) -> void:	
+	var joy_x = Input.get_joy_axis(player_input_num, JOY_AXIS_LEFT_X)
+	var joy_y = Input.get_joy_axis(player_input_num, JOY_AXIS_LEFT_Y)
+	
 	if abs(joy_x) < 0.1:
-		joy_x = 0;
+		joy_x = 0
 	if abs(joy_y) < 0.1:
-		joy_y = 0;
+		joy_y = 0
 
 	if joy_x != 0 || joy_y != 0:
-		var angle = atan2(joy_y, joy_x);
+		var left_stick_input = Vector2(joy_x, joy_y)
+		var rotation_ = left_stick_input.angle()
+		print(rad_to_deg(rotation_))
+		var angle = atan2(joy_y, joy_x)
 		target_rotation.y = -angle
-		print(target_rotation.y)
 		#rotation = target_rotation
+		#print(rad_to_deg(target_rotation.y))
 
-	if self.rotation.distance_to(target_rotation) > 0.1:
-		print(target_rotation)
+	if rotation.distance_to(target_rotation) > 0.1:
+		self.apply_torque_impulse(Vector3.UP * delta)
+		if angular_velocity.y > 3.0:
+			angular_velocity.y = 3.0
 	else:
 		pass
 		self.angular_velocity.y = move_toward(angular_velocity.y, 0, 8)
@@ -216,6 +234,7 @@ func enable_freefly():
 	collider.disabled = true
 	freeflying = true
 	velocity = Vector3.ZERO
+
 
 func disable_freefly():
 	collider.disabled = false
@@ -231,6 +250,7 @@ func release_mouse():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	mouse_captured = false
 
+
 func get_player_hands() -> void:
 	if(!playerTwo):
 		hand_id = skeleton.find_bone("mixamorigRightHand");
@@ -239,6 +259,7 @@ func get_player_hands() -> void:
 	
 	#THIS WILL TRACK WHEN LOOK MODIFIER NODE HAS PROCESSED 
 	look.modification_processed.connect(_on_modification_processed);
+
 
 ## Checks if some Input Actions haven't been created.
 ## Disables functionality accordingly.
